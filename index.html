@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prepositions – Geography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ocean:#D8EEF7; --grid:rgba(255,255,255,.65);
+  --ink:#0E3A5F; --blue:#1B6CA8; --orange:#D86400; --peach:#FDE8D4; --mint:#DDF3E6;
+  --good:#16895A; --bad:#C93C3C; --mark:#8ED3F4;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Nunito','Trebuchet MS',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{height:100%;height:-webkit-fill-available}
+body{
+  font-family:var(--sans);font-weight:700;color:var(--ink);line-height:1.35;
+  font-size:clamp(18px,2.1vw,28px);overflow:hidden;
+  -webkit-user-select:none;user-select:none;
+  background-color:var(--ocean);
+  background-image:linear-gradient(var(--grid) 2px,transparent 2px),linear-gradient(90deg,var(--grid) 2px,transparent 2px);
+  background-size:72px 72px;
+}
+.app{
+  height:100vh;height:-webkit-fill-available;display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+/* progress rail */
+.rail{display:flex;align-items:center;gap:1.2rem;padding:.65rem 1.4rem;background:var(--ink);color:#fff}
+.brand{font-family:var(--serif);font-size:1.25em;font-weight:700;white-space:nowrap}
+.steps{list-style:none;display:flex;flex:1;justify-content:flex-end;gap:.4rem;flex-wrap:wrap}
+.steps li{display:flex;align-items:center;gap:.5rem;padding:.3rem .85rem;border-radius:99px;font-size:.78em;opacity:.55}
+.steps li i{font-style:normal;font-weight:600;opacity:.85}
+.steps li.done{opacity:.9}
+.steps li.done::before{content:"\2713"}
+.steps li.cur{opacity:1;background:var(--orange)}
+/* scrolling area */
+.view{flex:1;display:flex;flex-direction:column;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:1.3rem 1.6rem 2.4rem}
+.screen{display:none;flex:none;width:100%;max-width:1180px;margin:0 auto}
+.screen.on{display:block}
+#intro{margin:auto}
+h1,h2{font-family:var(--serif);font-weight:700;line-height:1.1}
+h1{font-size:2.8em;margin-bottom:.5rem}
+h2{font-size:1.8em;margin-bottom:.7rem}
+.count{font-family:var(--sans);font-size:.5em;font-weight:700;background:#fff;border:3px solid var(--ink);border-radius:99px;padding:.1rem .7rem;vertical-align:middle;margin-left:.5rem}
+.lead{font-weight:600;max-width:32em;margin-bottom:1rem;text-wrap:balance}
+.card{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:1.1rem 1.3rem;box-shadow:6px 6px 0 var(--ink)}
+.sent{font-family:var(--serif);font-size:1.6em;font-weight:600;line-height:1.35}
+.hl{background:var(--mark);border-radius:.25em;padding:0 .25em;font-weight:700}
+.blank{display:inline-block;min-width:3.2em;border-bottom:4px solid var(--orange);text-align:center}
+.two{display:grid;grid-template-columns:1.25fr 1fr;gap:1.6rem;align-items:start}
+.intro{align-items:center}
+@media(max-width:860px){.two{grid-template-columns:1fr}.steps li i{display:none}}
+/* buttons */
+button{
+  font:inherit;color:inherit;cursor:pointer;background:#fff;
+  border:3px solid var(--ink);border-radius:14px;min-height:64px;min-width:64px;padding:.5rem 1.2rem;
+  box-shadow:0 5px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .15s;
+}
+button:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+button:focus-visible{outline:4px solid var(--orange);outline-offset:3px}
+button:disabled{cursor:default;color:inherit}
+.go{background:var(--orange);color:#fff;font-size:1.1em;padding:.6rem 2rem}
+.navrow{margin-top:1.3rem;display:flex;gap:1rem}
+/* intro */
+.chips{display:flex;flex-wrap:wrap;gap:.8rem;margin:1.1rem 0 1.7rem}
+.chip{background:var(--peach);border:3px solid var(--ink);border-radius:99px;padding:.3rem 1.1rem}
+.globewrap{position:relative;max-width:420px;width:100%;margin:0 auto}
+.globe{width:100%;height:auto;display:block}
+.tag{position:absolute;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:.2rem .7rem;font-size:.85em;box-shadow:3px 3px 0 var(--ink);white-space:nowrap}
+.t1{top:1%;left:26%}.t2{top:44%;right:-4%}.t3{bottom:10%;left:-3%}
+/* scene */
+.scenecard{padding:.7rem .7rem 1.1rem}
+.scenecard svg{width:100%;height:auto;display:block;border-radius:12px;border:3px solid var(--ink)}
+.scenecard .sent{margin:.9rem .5rem 0;min-height:1.4em;font-size:1.35em}
+.ball{transition:transform .75s cubic-bezier(.34,1.4,.5,1)}
+.boxB{opacity:0;transition:opacity .4s}
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.pbtn{font-size:1.2em}
+.pbtn.sel{background:var(--orange);color:#fff}
+/* quiz */
+.opts{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.1rem}
+.opt{flex:1 1 9rem;font-size:1.3em}
+.two .opts{flex-direction:column;margin-top:0}
+.two .opt{flex:none}
+.opt.good,.opt.bad{transition:none}
+.opt.good{background:var(--good);color:#fff}
+.opt.bad{background:var(--bad);color:#fff;animation:shake .35s}
+.opt:disabled:not(.good):not(.bad){opacity:.45}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.fb{display:none;margin-top:1rem;padding:.65rem 1rem;border-radius:12px;border:3px solid var(--ink)}
+.fb.show{display:block}.fb.good{background:var(--mint)}.fb.bad{background:var(--peach)}
+.scenecard + div .fb{margin-top:1rem}
+/* say it */
+.saycard{text-align:center;padding:1.8rem 1.3rem}
+.big{font-family:var(--serif);font-size:3.4em;font-weight:700;line-height:1.1;margin-bottom:.8rem}
+.ex{margin-top:.7rem;color:var(--blue);font-weight:700}
+/* done */
+.recap{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:.9rem;margin:1.2rem 0 1.7rem}
+.rchip{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:.6rem 1rem;font-weight:600}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="rail">
+    <div class="brand">Prepositions</div>
+    <ol class="steps" id="steps">
+      <li>Learn <i>2 min</i></li>
+      <li>Pick <i>3 min</i></li>
+      <li>Where? <i>3 min</i></li>
+      <li>Say it <i>2 min</i></li>
+    </ol>
+  </header>
+
+  <main class="view" id="view">
+
+    <section class="screen on" id="intro">
+      <div class="two intro">
+        <div>
+          <h1>Prepositions</h1>
+          <p class="lead">A preposition goes before a noun. It gives us more information, for example where something is.</p>
+          <div class="chips">
+            <span class="chip">places <span class="hl">on</span> our planet</span>
+            <span class="chip">parallel <span class="hl">to</span> the equator</span>
+          </div>
+          <button class="go" id="start">Start &middot; 10 minutes</button>
+        </div>
+        <div class="globewrap">
+          <svg class="globe" viewBox="0 0 300 300" aria-hidden="true">
+            <defs><clipPath id="gc"><circle cx="150" cy="150" r="130"/></clipPath></defs>
+            <circle cx="150" cy="150" r="130" fill="#6DB9E0"/>
+            <g clip-path="url(#gc)">
+              <path d="M62 96c20-24 56-14 62 8s-18 44-42 38-34-26-20-46z" fill="#7BC46A"/>
+              <path d="M168 150c26-10 60 4 54 32s-32 48-54 32-16-54 0-64z" fill="#E88B4B"/>
+              <g fill="none" stroke="#fff" stroke-width="3" opacity=".9">
+                <ellipse cx="150" cy="150" rx="55" ry="130"/><ellipse cx="150" cy="150" rx="100" ry="130"/>
+                <line x1="150" y1="20" x2="150" y2="280"/>
+                <path d="M20 92Q150 122 280 92"/><path d="M20 208Q150 178 280 208"/>
+                <path d="M20 150H280" stroke="#FFB86B" stroke-width="6"/>
+              </g>
+            </g>
+            <circle cx="150" cy="150" r="130" fill="none" stroke="#0E3A5F" stroke-width="6"/>
+          </svg>
+          <span class="tag t1"><span class="hl">at</span> the North Pole</span>
+          <span class="tag t2"><span class="hl">on</span> the equator</span>
+          <span class="tag t3"><span class="hl">in</span> Brazil</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="learn">
+      <h2>See it</h2>
+      <p class="lead">Tap a word. Watch the ball move.</p>
+      <div class="two">
+        <div class="card scenecard"><div id="scene1"></div><p class="sent" id="sent1"></p></div>
+        <div>
+          <div class="pgrid" id="pgrid"></div>
+          <div class="navrow"><button class="go" data-go="pick">Practise</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="pick">
+      <h2>Choose the preposition <span class="count" id="pickCount"></span></h2>
+      <div class="card">
+        <p class="sent" id="pickQ"></p>
+        <div id="pickBox"></div>
+        <div class="navrow"><button class="go" id="pickNext" hidden>Next</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="where">
+      <h2>Where is the ball? <span class="count" id="whereCount"></span></h2>
+      <div class="two">
+        <div class="card scenecard"><div id="scene2"></div><p class="sent" id="sent2"></p></div>
+        <div>
+          <div id="whereBox"></div>
+          <div class="navrow"><button class="go" id="whereNext" hidden>Next</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="say">
+      <h2>Say it <span class="count" id="sayCount"></span></h2>
+      <div class="card saycard">
+        <div class="big" id="sayWord"></div>
+        <p class="sent" id="sayTask"></p>
+        <p class="ex" id="sayEx"></p>
+      </div>
+      <div class="navrow"><button class="go" id="sayNext">Next card</button></div>
+    </section>
+
+    <section class="screen" id="done">
+      <h1>Well done!</h1>
+      <p class="lead" id="doneScore"></p>
+      <div class="recap" id="recap"></div>
+      <button class="go" id="again">Play again</button>
+    </section>
+
+  </main>
+</div>
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+/* ---------- ball and box scene ---------- */
+var POS={on:[320,104,1,1],under:[320,264,.9,1],next:[185,264,1,1],behind:[398,182,.9,0],front:[326,252,1.45,1],between:[430,264,1,1]};
+var WORD={on:'on',under:'under',next:'next to',behind:'behind',front:'in front of',between:'between'};
+function tail(k){return k==='between'?' the two boxes.':' the box.'}
+function sentence(k){return 'The ball is <span class="hl">'+WORD[k]+'</span>'+tail(k)}
+var BALL='<circle r="26" fill="#E8710A" stroke="#0E3A5F" stroke-width="4"/><path d="M-26 0H26M0-26V26" stroke="#0E3A5F" stroke-width="3" opacity=".5" fill="none"/><circle cx="-9" cy="-10" r="6" fill="#fff" opacity=".55"/>';
+function scene(host){
+  host.innerHTML='<svg viewBox="0 0 640 320" role="img" aria-label="A ball and a box">'+
+    '<rect width="640" height="320" fill="#EAF6FB"/><rect y="290" width="640" height="30" fill="#BFE1EF"/>'+
+    '<g class="ball">'+BALL+'</g>'+
+    '<rect x="262" y="228" width="14" height="62" fill="#0E3A5F"/><rect x="364" y="228" width="14" height="62" fill="#0E3A5F"/>'+
+    '<rect x="250" y="130" width="140" height="100" rx="8" fill="#1B6CA8" stroke="#0E3A5F" stroke-width="4"/>'+
+    '<path d="M252 156H388" stroke="#0E3A5F" stroke-width="4"/><rect x="300" y="178" width="40" height="10" rx="5" fill="#0E3A5F" opacity=".55"/>'+
+    '<rect class="boxB" x="470" y="200" width="90" height="90" rx="8" fill="#1F9D6B" stroke="#0E3A5F" stroke-width="4"/>'+
+    '<g class="ball">'+BALL+'</g></svg>';
+  var b=$$('.ball',host),B=$('.boxB',host);
+  var api={set:function(k){
+    var p=POS[k];
+    b.forEach(function(g){g.style.transform='translate('+p[0]+'px,'+p[1]+'px) scale('+p[2]+')'});
+    b[0].style.opacity=p[3]?0:1;b[1].style.opacity=p[3]?1:0;
+    B.style.opacity=(k==='between')?1:0;
+  }};
+  api.set('on');
+  return api;
+}
+
+/* ---------- quiz engine ---------- */
+function ask(box,nextBtn,o,done){
+  box.innerHTML='';box.dataset.lock='';nextBtn.hidden=true;
+  var row=el('div','opts'),fb=el('div','fb');
+  o.options.forEach(function(w){
+    var b=el('button','opt',w);
+    b.onclick=function(){
+      if(box.dataset.lock)return;box.dataset.lock='1';
+      var ok=(w===o.answer);
+      b.classList.add(ok?'good':'bad');
+      $$('.opt',row).forEach(function(x){if(x.textContent===o.answer)x.classList.add('good');x.disabled=true});
+      fb.className='fb show '+(ok?'good':'bad');
+      fb.innerHTML=(ok?'Yes! ':'Not quite. ')+(o.why||'');
+      if(o.reveal)o.reveal();
+      nextBtn.hidden=false;
+      done(ok);
+    };
+    row.appendChild(b);
+  });
+  box.appendChild(row);box.appendChild(fb);
+}
+
+/* ---------- content ---------- */
+var PICK=[
+  {q:'Rio de Janeiro is ___ Brazil.',a:'in',o:['in','on','between'],why:'We use <b>in</b> for a place inside a country.'},
+  {q:'Sydney is ___ the east coast of Australia.',a:'on',o:['on','under','between'],why:'We say <b>on</b> the coast.'},
+  {q:'The equator is halfway ___ the North Pole and the South Pole.',a:'between',o:['between','on','into'],why:'<b>Between</b> goes with two places.'},
+  {q:'Lines of latitude run ___ east to west.',a:'from',o:['from','at','in'],why:'We say <b>from</b> &hellip; <b>to</b> &hellip; for a direction.'},
+  {q:'The Tropic of Cancer is parallel ___ the equator.',a:'to',o:['to','in','on'],why:'We say parallel <b>to</b>.'},
+  {q:'Each degree is divided ___ 60 minutes.',a:'into',o:['into','on','between'],why:'We divide something <b>into</b> parts.'}
+];
+var SAY=[
+  {w:'in',t:'Where do you live? Say the city or the country.',e:'I live in &hellip;'},
+  {w:'on',t:'Name something on the wall or on your desk.',e:'There is a &hellip; on &hellip;'},
+  {w:'between',t:'Who sits between two students? Say it.',e:'&hellip; sits between &hellip; and &hellip;'},
+  {w:'from &hellip; to',t:'Say a trip you know, from one place to another.',e:'I walk from &hellip; to &hellip;'}
+];
+var STEPS=['learn','pick','where','say'];
+var pi=0,ps=0,wi=0,ws=0,WK=[],si=0;
+var s1=scene($('#scene1')),s2=scene($('#scene2'));
+
+/* ---------- learn ---------- */
+Object.keys(POS).forEach(function(k){
+  var b=el('button','pbtn',WORD[k]);
+  b.onclick=function(){
+    s1.set(k);$('#sent1').innerHTML=sentence(k);
+    $$('.pbtn').forEach(function(x){x.classList.toggle('sel',x===b)});
+  };
+  $('#pgrid').appendChild(b);
+});
+$$('.pbtn')[0].click();
+
+/* ---------- pick ---------- */
+function showPick(){
+  var it=PICK[pi];
+  $('#pickCount').textContent=(pi+1)+' / '+PICK.length;
+  $('#pickQ').innerHTML=it.q.replace('___','<span class="blank">&nbsp;</span>');
+  $('#pickNext').textContent=(pi===PICK.length-1)?'Next activity':'Next';
+  ask($('#pickBox'),$('#pickNext'),{answer:it.a,options:shuffle(it.o),why:it.why,
+    reveal:function(){$('#pickQ .blank').outerHTML='<span class="hl">'+it.a+'</span>'}},
+    function(ok){if(ok)ps++});
+}
+$('#pickNext').onclick=function(){if(pi<PICK.length-1){pi++;showPick()}else go('where')};
+
+/* ---------- where is the ball ---------- */
+function showWhere(){
+  var k=WK[wi],keys=Object.keys(POS);
+  s2.set(k);
+  $('#sent2').innerHTML='The ball is <span class="blank">&nbsp;</span>'+tail(k);
+  $('#whereCount').textContent=(wi+1)+' / '+WK.length;
+  $('#whereNext').textContent=(wi===WK.length-1)?'Next activity':'Next';
+  var opts=shuffle([k].concat(shuffle(keys.filter(function(x){return x!==k})).slice(0,2))).map(function(x){return WORD[x]});
+  ask($('#whereBox'),$('#whereNext'),{answer:WORD[k],options:opts,why:'',
+    reveal:function(){$('#sent2').innerHTML=sentence(k)}},
+    function(ok){if(ok)ws++});
+}
+$('#whereNext').onclick=function(){if(wi<WK.length-1){wi++;showWhere()}else go('say')};
+
+/* ---------- say it ---------- */
+function showSay(){
+  var c=SAY[si];
+  $('#sayCount').textContent=(si+1)+' / '+SAY.length;
+  $('#sayWord').innerHTML='<span class="hl">'+c.w+'</span>';
+  $('#sayTask').textContent=c.t;
+  $('#sayEx').innerHTML=c.e;
+  $('#sayNext').textContent=(si===SAY.length-1)?'Finish':'Next card';
+}
+$('#sayNext').onclick=function(){if(si<SAY.length-1){si++;showSay()}else go('done')};
+
+/* ---------- finish ---------- */
+function finish(){
+  $('#doneScore').textContent='You chose '+ps+' of '+PICK.length+' prepositions and '+ws+' of '+WK.length+' ball positions correctly.';
+  $('#recap').innerHTML=PICK.map(function(it){return '<div class="rchip">'+it.q.replace('___','<span class="hl">'+it.a+'</span>')+'</div>'}).join('');
+}
+
+/* ---------- navigation ---------- */
+function go(id){
+  $$('.screen').forEach(function(s){s.classList.toggle('on',s.id===id)});
+  var i=STEPS.indexOf(id);
+  $$('#steps li').forEach(function(li,n){
+    li.classList.toggle('cur',n===i);
+    li.classList.toggle('done',i<0?id==='done':n<i);
+  });
+  $('#view').scrollTop=0;
+  if(id==='pick'){pi=0;ps=0;showPick()}
+  if(id==='where'){wi=0;ws=0;WK=shuffle(Object.keys(POS)).slice(0,5);showWhere()}
+  if(id==='say'){si=0;showSay()}
+  if(id==='done')finish();
+}
+$('#start').onclick=function(){go('learn')};
+$$('[data-go]').forEach(function(b){b.onclick=function(){go(b.getAttribute('data-go'))}});
+$('#again').onclick=function(){go('intro')};
+})();
+</script>
+</body>
+</html>
